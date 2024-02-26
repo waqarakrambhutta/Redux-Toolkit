@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Spinners from "../Items/Spinners";
 
 interface Products {
   id: number;
@@ -12,21 +13,10 @@ const Product = () => {
   const [products, getProducts] = useState<Products[]>([]);
   const [loader, setLoader] = useState(true);
 
-  useEffect(() => {
-    fetch("https://fakestoreapi.com/products/")
-      .then((data) => data.json())
-      .then((response) => {
-        setLoader(false);
-        getProducts(response);
-        console.log("fetched");
-        console.log(products);
-      });
-  }, []);
-
   const cards = (
     <div className="grid grid-cols-4 gap-4">
       {products.map((product) => (
-        <div key={product.id} className="grid-cols-3">
+        <div key={product.id} className="items-center">
           <div className="w-[18rem] mb-4 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#">
               <img
@@ -63,12 +53,19 @@ const Product = () => {
       ))}
     </div>
   );
-  return (
-    <>
-      {/* {loader ? <Spinners /> : { cards }} */}
-      {cards}
-    </>
-  );
+
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products/")
+      .then((data) => data.json())
+      .then((response) => {
+        setLoader(false);
+        getProducts(response);
+        console.log("fetched");
+        console.log(products);
+      });
+  }, []);
+
+  return <>{loader ? <Spinners /> : <div className="mt-5">{cards}</div>}</>;
 };
 
 export default Product;
