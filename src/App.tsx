@@ -1,11 +1,9 @@
 import "./App.css";
 import Cart from "./components/Cart";
 import Dashboard from "./components/Dashboard";
-import Product from "./components/Product";
 import {
   createBrowserRouter,
   createRoutesFromElements,
-  BrowserRouter,
   Route,
   RouterProvider,
 } from "react-router-dom";

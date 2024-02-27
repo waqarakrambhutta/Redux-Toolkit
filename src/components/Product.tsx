@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import Spinners from "../Items/Spinners";
+import { useDispatch } from "react-redux";
+import { add } from "../store/cartSlice";
 
-interface Products {
+export interface ProductsProp {
   id: number;
   image: any;
   title: string;
@@ -10,8 +12,14 @@ interface Products {
 }
 
 const Product = () => {
-  const [products, getProducts] = useState<Products[]>([]);
+  const dispatch = useDispatch()
+
+  const [products, getProducts] = useState<ProductsProp[]>([]);
   const [loader, setLoader] = useState(true);
+
+  const addToCart = (product: any) => {
+    dispatch(add(product))
+  };
 
   const cards = (
     <div className="grid grid-cols-4 gap-4">
@@ -19,15 +27,17 @@ const Product = () => {
         <div key={product.id} className="items-center">
           <div className="w-[18rem] mb-4 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#">
-              <img
-                className="p-8 w-[16rem] rounded-t-lg"
-                src={product.image}
-                alt="product image"
-              />
+              <div className="p-2 pb-2 w-[18rem] rounded-2xl">
+                <img
+                  className="object-cover "
+                  src={product.image}
+                  alt="product image"
+                />
+              </div>
             </a>
             <div className="px-5 pb-5">
               <a href="#">
-                <h5 className="text-l font-semibold tracking-tight text-gray-900 dark:text-white">
+                <h5 className="pt-2 text-l font-semibold tracking-tight text-gray-900 dark:text-white">
                   {product.title}
                 </h5>
               </a>
@@ -40,12 +50,12 @@ const Product = () => {
                 <span className="text-xl font-bold text-gray-900 dark:text-white">
                   {product.price}
                 </span>
-                <a
-                  href="#"
+                <button
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={() => addToCart(product)}
                 >
                   Add to cart
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -61,7 +71,6 @@ const Product = () => {
         setLoader(false);
         getProducts(response);
         console.log("fetched");
-        console.log(products);
       });
   }, []);
 
