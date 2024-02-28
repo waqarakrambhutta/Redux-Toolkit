@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Spinners from "../Items/Spinners";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { add } from "../store/cartSlice";
+import { getProduct } from "../store/productSlice";
 
 export interface ProductsProp {
   id: number;
@@ -12,18 +13,22 @@ export interface ProductsProp {
 }
 
 const Product = () => {
-  const dispatch = useDispatch()
-
-  const [products, getProducts] = useState<ProductsProp[]>([]);
+  const dispatch = useDispatch();
+  const { data: products } = useSelector((state: any) => state.products);
   const [loader, setLoader] = useState(true);
 
+  useEffect(() => {
+    dispatch(getProduct() as any);
+    setLoader(false);
+  }, []);
+
   const addToCart = (product: any) => {
-    dispatch(add(product))
+    dispatch(add(product));
   };
 
   const cards = (
     <div className="grid grid-cols-4 gap-4">
-      {products.map((product) => (
+      {products.map((product: any) => (
         <div key={product.id} className="items-center">
           <div className="w-[18rem] mb-4 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#">
@@ -63,16 +68,6 @@ const Product = () => {
       ))}
     </div>
   );
-
-  useEffect(() => {
-    fetch("https://fakestoreapi.com/products/")
-      .then((data) => data.json())
-      .then((response) => {
-        setLoader(false);
-        getProducts(response);
-        console.log("fetched");
-      });
-  }, []);
 
   return <>{loader ? <Spinners /> : <div className="mt-5">{cards}</div>}</>;
 };
