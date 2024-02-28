@@ -1,7 +1,14 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { remove } from "../store/cartSlice";
 
 const Cart = () => {
   const cartProducts = useSelector((state: any) => state.cart);
+
+  const dispatch = useDispatch();
+
+  const removeFromCart = (id: any) => {
+    dispatch(remove(id));
+  };
 
   const cards = (
     <div className="grid grid-cols-4 gap-4">
@@ -32,7 +39,10 @@ const Cart = () => {
                 <span className="text-xl font-bold text-gray-900 dark:text-white">
                   {product.price}
                 </span>
-                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={() => removeFromCart(product.id)}
+                >
                   Remove from cart
                 </button>
               </div>
